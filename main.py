@@ -39,11 +39,21 @@ bars_graph = px.bar(
     totals_df,
     x="condition",
     y="count",
+    # color와 update_traces를 둘 다 이용하면 오류 발생
+    # color는 시스템이 자동으로 임의로 색을 설정
+    # update_traces는 내가 원하는 색으로 설정 가능
+    # color=["Confirmed", "Recovered", "Deaths"],
     hover_data={"count": ":,"},
     template="plotly_dark",
     title="Total Global Cases",
+    labels={
+        "condition": "Condition",
+        "count": "Count",
+        "color": "Condition",
+    },  # 이렇게 labes를 이용해서도 변경 가능
 )
-bars_graph.update_layout(xaxis=dict(title="Condition"), yaxis=dict(title="Count"))
+# bars_graph.update_layout(xaxis=dict(title="Condition"), yaxis=dict(title="Count"))
+bars_graph.update_traces(marker_color=["#e74c3c", "#8e44ad", "#27ae60"])
 
 # Dash!!!
 app.layout = html.Div(
@@ -61,15 +71,28 @@ app.layout = html.Div(
             ],
         ),
         html.Div(
+            style={
+                "display": "grid",
+                "gap": 50,
+                "gridTemplateColumns": "repeat(4, 1fr)",
+            },
             children=[
-                html.Div(children=[dcc.Graph(figure=bubble_map)]),
+                html.Div(
+                    style={"grid-column": "span 3"},
+                    children=[dcc.Graph(figure=bubble_map)],
+                ),
                 html.Div(children=[make_table(countries_df)]),
-            ]
+            ],
         ),
         html.Div(
+            style={
+                "display": "grid",
+                "gap": 50,
+                "gridTemplateColumns": "repeat(4, 1fr)",
+            },
             children=[
                 html.Div(children=[dcc.Graph(figure=bars_graph)]),
-            ]
+            ],
         ),
     ],
 )
