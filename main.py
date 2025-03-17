@@ -18,6 +18,12 @@ stylesheets = [
 
 app = Dash(external_stylesheets=stylesheets)
 
+app.title = "Corona Dashboard"
+
+# flask server를 사용하는데 코드에 서버를 노출시켜 줘야 함
+# Dash가 Flask를 이용하게 됨
+server = app.server
+
 # Plotly
 bubble_map = px.scatter_geo(
     countries_df,
@@ -161,5 +167,6 @@ def update_hello(value):
     return fig
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# 개발 과정에서만 아래와 같이 사용: 디버그용
+# if __name__ == "__main__":
+#     app.run(debug=True)
