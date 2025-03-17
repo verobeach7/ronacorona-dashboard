@@ -1,7 +1,13 @@
 # Data Visualization
 from dash import Dash, html, dcc, Input, Output, callback
 import plotly.express as px
-from data import countries_df, totals_df, dropdown_options
+from data import (
+    countries_df,
+    totals_df,
+    dropdown_options,
+    make_global_df,
+    make_country_df,
+)
 from table_builders import make_table
 
 
@@ -93,6 +99,7 @@ app.layout = html.Div(
             children=[
                 html.Div(children=[dcc.Graph(figure=bars_graph)]),
                 html.Div(
+                    style={"grid-column": "span 3"},
                     children=[
                         dcc.Dropdown(
                             id="country",
@@ -101,7 +108,7 @@ app.layout = html.Div(
                                 for country in dropdown_options
                             ],
                         ),
-                        html.H1(id="country-output"),
+                        dcc.Graph(id="country_graph"),
                     ],
                 ),
             ],
@@ -111,9 +118,41 @@ app.layout = html.Div(
 
 
 # Output(id, 어디에 값을 보낸지), [Input(id, 무엇을 값으로 가져올지)]
-@callback(Output("country-output", "children"), Input("country", "value"))
+@callback(Output("country_graph", "figure"), Input("country", "value"))
 def update_hello(value):
-    print(value)
+    if value:
+        df = make_country_df(value)
+    else:
+        df = make_global_df()
+
+    fig = px.line(
+        df,
+        x="date",
+        y=["confirmed", "deaths", "recovered"],
+        template="plotly_dark",
+        labels={
+            "value": "Cases",
+            "variable": "Condition",
+            "date": "Date",
+        },
+        hover_data={
+            "value": ":,",
+            "variable": False,
+            "date": False,
+        },
+        color_discrete_map={
+            "confirmed": "#e74c3c",
+            "deaths": "#8e44ad",
+            "recovered": "#27ae60",
+        },
+    )
+    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True)))
+    # 수작업으로 색을 바꿔줄 수도 있음
+    # fig["data"][0]["line"]["color"] = "#e74c3c"
+    # fig["data"][1]["line"]["color"] = "#8e44ad"
+    # fig["data"][2]["line"]["color"] = "#27ae60"
+
+    return fig
 
 
 if __name__ == "__main__":
