@@ -1,7 +1,7 @@
 # Data Visualization
 from dash import Dash, html, dcc, Input, Output, callback
 import plotly.express as px
-from data import countries_df, totals_df
+from data import countries_df, totals_df, dropdown_options
 from table_builders import make_table
 
 
@@ -94,15 +94,15 @@ app.layout = html.Div(
                 html.Div(children=[dcc.Graph(figure=bars_graph)]),
                 html.Div(
                     children=[
-                        dcc.Input(
-                            placeholder="What's your name?",
-                            id="hello-input",
+                        dcc.Dropdown(
+                            id="country",
+                            options=[
+                                {"label": country, "value": country}
+                                for country in dropdown_options
+                            ],
                         ),
-                        html.H2(
-                            children="Hello Anonymous",
-                            id="hello-output",
-                        ),
-                    ]
+                        html.H1(id="country-output"),
+                    ],
                 ),
             ],
         ),
@@ -111,12 +111,9 @@ app.layout = html.Div(
 
 
 # Output(id, 어디에 값을 보낸지), [Input(id, 무엇을 값으로 가져올지)]
-@callback(Output("hello-output", "children"), Input("hello-input", "value"))
+@callback(Output("country-output", "children"), Input("country", "value"))
 def update_hello(value):
-    if value is None:
-        return "Hello Anonymous!"
-    else:
-        return f"Hello {value}!"
+    print(value)
 
 
 if __name__ == "__main__":
