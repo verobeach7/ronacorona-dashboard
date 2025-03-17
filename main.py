@@ -102,6 +102,12 @@ app.layout = html.Div(
                     style={"grid-column": "span 3"},
                     children=[
                         dcc.Dropdown(
+                            style={
+                                "width": 320,
+                                "margin": "0 auto",
+                                "color": "#111111",
+                            },
+                            placeholder="Select a Country",
                             id="country",
                             options=[
                                 {"label": country, "value": country}
