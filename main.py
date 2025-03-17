@@ -1,7 +1,6 @@
 # Data Visualization
 from dash import Dash, html, dcc
 import plotly.express as px
-import pandas as pd
 from data import countries_df
 from table_builders import make_table
 
@@ -23,6 +22,7 @@ bubble_map = px.scatter_geo(
     locations="Country_Region",
     locationmode="country names",
     template="plotly_dark",
+    projection="natural earth",
     color="Confirmed",
     size="Confirmed",
     size_max=30,
