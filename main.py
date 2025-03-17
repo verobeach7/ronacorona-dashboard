@@ -30,10 +30,7 @@ app.layout = html.Div(
     },
     children=[
         html.Header(
-            style={
-                "textAlign": "center",
-                "paddingTop": "50px",
-            },
+            style={"textAlign": "center", "paddingTop": "50px", "marginBottom": 100},
             children=[
                 html.H1("Corona Dashboard", style={"fontSize": 40}),
             ],
