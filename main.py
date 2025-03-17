@@ -2,6 +2,13 @@
 from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd
+from data import countries_df
+
+# .columns를 이용하여 DataFrame의 헤더 제목을 가져올 수 있음
+# print(countries_df.columns)
+
+# .values를 이용하여 DataFrame의 데이터셀을 가져올 수 있음
+print(countries_df.values)
 
 stylesheets = [
     "https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css",
@@ -29,6 +36,40 @@ app.layout = html.Div(
             children=[
                 html.H1("Corona Dashboard", style={"fontSize": 40}),
             ],
+        ),
+        html.Div(
+            children=[
+                html.Div(
+                    children=[
+                        html.Table(
+                            children=[
+                                html.Thead(
+                                    children=[
+                                        html.Tr(
+                                            children=[
+                                                # Python에서만 가능한 형태. for 반복문을 뒤에서 사용하여 한 줄 쓰기가 가능.
+                                                html.Th(column_name.replace("_", " "))
+                                                for column_name in countries_df.columns
+                                            ]
+                                        )
+                                    ]
+                                ),
+                                html.Tbody(
+                                    children=[
+                                        html.Tr(
+                                            children=[
+                                                html.Td(value_column)
+                                                for value_column in value
+                                            ]
+                                        )
+                                        for value in countries_df.values
+                                    ]
+                                ),
+                            ]
+                        )
+                    ]
+                )
+            ]
         ),
     ],
 )
