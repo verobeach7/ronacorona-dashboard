@@ -9,7 +9,7 @@ from table_builders import make_table
 # print(countries_df.columns)
 
 # .values를 이용하여 DataFrame의 데이터셀을 가져올 수 있음
-print(countries_df.values)
+# print(countries_df.values)
 
 stylesheets = [
     "https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css",
@@ -17,6 +17,24 @@ stylesheets = [
 ]
 
 app = Dash(external_stylesheets=stylesheets)
+
+bubble_map = px.scatter_geo(
+    countries_df,
+    locations="Country_Region",
+    locationmode="country names",
+    template="plotly_dark",
+    color="Confirmed",
+    size="Confirmed",
+    size_max=30,
+    hover_name="Country_Region",
+    hover_data={
+        # "Confirmed": True,
+        "Confirmed": ":,",
+        "Recovered": ":,",
+        "Deaths": ":,",
+        "Country_Region": False,
+    },
+)
 
 app.layout = html.Div(
     # html.H1("Corona Dashboard"),
@@ -35,7 +53,12 @@ app.layout = html.Div(
                 html.H1("Corona Dashboard", style={"fontSize": 40}),
             ],
         ),
-        html.Div(children=[html.Div(children=[make_table(countries_df)])]),
+        html.Div(
+            children=[
+                html.Div(children=[dcc.Graph(figure=bubble_map)]),
+                html.Div(children=[make_table(countries_df)]),
+            ]
+        ),
     ],
 )
 
